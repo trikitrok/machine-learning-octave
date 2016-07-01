@@ -28,7 +28,7 @@ term2 = - (1 - y)' * log(1 - h);
 J = inv_m * (term1 + term2);
 
 r = h - y;
-grad = inv_m * (r' * X)
+grad = inv_m * (r' * X);
 
 
 
