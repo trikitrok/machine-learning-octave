@@ -29,13 +29,11 @@ theta_no_1 = theta(2:n,:);
 term3 = theta_no_1' * theta_no_1;
 J = inv_m * (term1 + term2 + term3 * lambda/2);
 
-% r = zeros(size(theta));
-% r(1) = h(1) - y(1);
-% r(2:n,:) = h(2:n,:) - y(2:n,:) + lambda * theta_no_1;
+grad_reg = zeros(size(theta));
+grad_reg(2:n,:) = inv_m * lambda * theta_no_1;
 
-% grad = inv_m * (X * r);
-
-
+r = h - y;
+grad = inv_m * (X' * r) + grad_reg;
 
 % =============================================================
 
