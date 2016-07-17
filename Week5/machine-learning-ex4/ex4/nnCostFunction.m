@@ -25,11 +25,6 @@ Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):en
 % Setup some useful variables
 m = size(X, 1);
 
-% display(hidden_layer_size);
-% display(input_layer_size);
-% display(size(Theta1));
-% display(size(Theta2));
-
 % You need to return the following variables correctly 
 J = 0;
 Theta1_grad = zeros(size(Theta1));
@@ -67,31 +62,32 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
-for i=1:m
-  % Label recoding
-  num_output_units = size(Theta2);
-  num = y(i);
-  y_i = zeros(num_output_units, 1);
-  y_i(num) = 1;
+y_matrix = eye(num_labels)(y,:);
 
-  x_i = X(i,:);
+% Forward propagation
+a1 = [ones(m, 1) X];
+z2 = a1 * Theta1'; 
+a2 = sigmoid(z2);
 
-  % Forward propagation
-  x_i = [1 x_i];
-  z2 = Theta1 * x_i';
-  a2 = sigmoid(z2');
+a2 = [ones(m, 1) a2];
+z3 = a2 * Theta2';
+a3 = sigmoid(z3);
 
-  a2 = [1 a2];
-  z3 = Theta2 * a2';
-  a3 = sigmoid(z3');
+% Cost function
+term1 = - y_matrix .* log(a3);
+term2 = - (1 - y_matrix) .* log(1 - a3);
+J = sum(sum(term1 + term2));
 
-  h = a3';
+% Backward propagation
+delta_3 = a3 - y_matrix;
+delta_2 = delta_3 * Theta2(:,2:end);
+delta_2 = delta_2 .* sigmoidGradient(z2);
 
-  term1 = - y_i' * log(h);
-  term2 = - (1 - y_i)' * log(1 - h);
+D1 = delta_2' * a1;
+D2 = delta_3' * a2;
 
-  J = J + term1 + term2;
-end
+Theta1_grad = 1/m * D1;
+Theta2_grad = 1/m * D2;
 
 % Regularization
 [a b] = size(Theta1);
@@ -105,13 +101,11 @@ reg_term2 = sum(sum(Theta2_no_bias .* Theta2_no_bias));
 J = [J + lambda/2 * [reg_term1 + reg_term2]]/m;
 
 
-
 % -------------------------------------------------------------
 
 % =========================================================================
 
 % Unroll gradients
 grad = [Theta1_grad(:) ; Theta2_grad(:)];
-
 
 end
