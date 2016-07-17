@@ -93,20 +93,16 @@ for i=1:m
   J = J + term1 + term2;
 end
 
-J = J / m;
+% Regularization
+[a b] = size(Theta1);
+Theta1_no_bias = Theta1(:, 2:b);
+reg_term1 = sum(sum(Theta1_no_bias .* Theta1_no_bias));
 
+[a b] = size(Theta2);
+Theta2_no_bias = Theta2(:, 2:b);
+reg_term2 = sum(sum(Theta2_no_bias .* Theta2_no_bias));
 
-
-
-
-
-
-
-
-
-
-
-
+J = [J + lambda/2 * [reg_term1 + reg_term2]]/m;
 
 
 
