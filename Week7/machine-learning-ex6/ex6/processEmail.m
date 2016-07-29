@@ -104,7 +104,7 @@ while ~isempty(email_contents)
         end
     end
     if(index ~= 0) 
-        word_indices = [word_indices ; index]
+        word_indices = [word_indices ; index];
     end
 
     % =============================================================
